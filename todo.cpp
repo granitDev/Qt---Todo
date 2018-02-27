@@ -32,8 +32,17 @@ void ToDo::addTask()
     {
         qDebug() << "Adding new task";
         Task *task = new Task(name);
+        connect(task, &Task::removed, this, &ToDo::removeTask);
         mTask.append(task);
         ui->taskLayout->addWidget(task);
     }
 
+}
+
+void ToDo::removeTask(Task *task)
+{
+    mTask.removeOne(task);
+    ui->taskLayout->removeWidget(task);
+    task->setParent(0);
+    delete task;
 }

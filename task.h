@@ -20,8 +20,12 @@ public:
     QString name() const;
     bool isDone() const;
 
+signals:
+    void removed(Task* task);
+
 private:
     Ui::Task *ui;
+    void rename();
 
 };
 
