@@ -15,9 +15,9 @@ Task::Task(const QString &name, QWidget *parent) :
         return "-------- " + taskName.toUpper();
     };
     connect(ui->removeButton, &QPushButton::clicked,
-            [this, name, prettyName] {
+            [=] {
         qDebug() << "Trying to remove" << prettyName(name);
-        this->emit removed(this);
+        emit removed(this);
     });
     connect(ui->checkBox, &QCheckBox::toggled, this, &Task::checked);
 }
