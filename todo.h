@@ -16,10 +16,12 @@ class ToDo : public QMainWindow
 public:
     explicit ToDo(QWidget *parent = 0);
     ~ToDo();
+    void updateStatus();
 
 public slots:
     void addTask();
     void removeTask(Task *task);
+    void statusChanged(Task *task);
 
 private:
     Ui::ToDo *ui;

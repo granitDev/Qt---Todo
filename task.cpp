@@ -1,6 +1,7 @@
 #include "task.h"
 #include "ui_task.h"
 #include <QInputDialog>
+#include <QDebug>
 
 Task::Task(const QString &name, QWidget *parent) :
     QWidget(parent),
@@ -9,7 +10,16 @@ Task::Task(const QString &name, QWidget *parent) :
     ui->setupUi(this);
     setName(name);
     connect(ui->editButton, &QPushButton::clicked, this, &Task::rename);
-    connect(ui->removeButton, &QPushButton::clicked, [this] { emit removed(this); });
+
+    auto prettyName = [] (const QString& taskName) -> QString {
+        return "-------- " + taskName.toUpper();
+    };
+    connect(ui->removeButton, &QPushButton::clicked,
+            [this, name, prettyName] {
+        qDebug() << "Trying to remove" << prettyName(name);
+        this->emit removed(this);
+    });
+    connect(ui->checkBox, &QCheckBox::toggled, this, &Task::checked);
 }
 
 Task::~Task()
@@ -27,9 +37,17 @@ QString Task::name() const
     return ui->checkBox->text();
 }
 
-bool Task::isDone() const
+bool Task::isCompleted() const
 {
     return ui->checkBox->isChecked();
+}
+
+void Task::checked(bool checked)
+{
+    QFont font(ui->checkBox->font());
+    font.setStrikeOut(checked);
+    ui->checkBox->setFont(font);
+    emit statusChanged(this);
 }
 
 void Task::rename()
